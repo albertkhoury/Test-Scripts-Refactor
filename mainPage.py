@@ -4,12 +4,12 @@ import os
 
 #install pre-reqs
 os.system('apt-get install jq')
-
+latestRAW = os.system("curl -s http://127.0.0.1:5000/latest | \jq '.'")
 
 sg.theme('DarkAmber')   # Add a touch of color
 # All the stuff inside your window.
 layout = [  [sg.Text('Red Meter Serial #: xxxxx')],
-            [sg.Text('SG: xx, Density: xx, Pressure: xx, Flow: xx')],
+            [sg.Text(latestRAW)],
             [sg.Text('Cartridge Name:'), sg.InputText(), sg.Button('Enter')],
             [sg.Text('RUN Mass Configuration [Saved/NotSaved]'), sg.Button('Configure')],
             [sg.Button('Mass Calibration')],
