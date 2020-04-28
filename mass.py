@@ -1,4 +1,5 @@
 import os
+import keyboard
 from datetime import datetime
 
 print("========================================================= \n",
@@ -10,56 +11,6 @@ print("========================================================= \n",
       )
 
 cartName = input("ENTER:  Cartridge name: ")
-diameter = input("ENTER:  Inner-Diameter of the cartridge (inches): ")
-length = input("ENTER:  Length of the cartridge (inches): ")
-wraps = input("IF: carbon fiber, enter the number of ply/wraps. For Rubber, Enter: 0 ... : ")
-
-dir = "/var/lib/rosenimbus/csv/" + cartName
-checkDir = os.path.isdir(dir)
-
-if checkDir == dir:
-      print("A cartridge with this name has already been tested... Re-using cartridge specs")
-
-#IF: carbon fiber...
-if wraps != 0:
-      print("This is a Carbon Fiber Cartridge...Entering Carbon Fiber Selection...\n")
-      cureAmbient = input("ENTER: Cure time at ambient temperature in minutes: ")
-      cureBaked = input("ENTER: Post-cure time at 160°F in minutes: ")
-      linerType = input("ENTER: Liner Type --> 1 for Gum Rubber, 2 for Neoprene, 3 for Nitrile")
-      if linerType == "1":
-            print("Liner Type: Gum Rubber")
-            #linerType = gumRubber
-      if linerType == "2":
-            print("Liner Type: Neoprene")
-            #linerType = neoprene
-      if linerType == "3":
-            print("Liner Type: Nitrile")
-            #linerType = nitrile
-
-if wraps == 0:
-      cureAmbient = 0
-      cureBaked = 0
-      linerType = 0
-
-# echo "Writing calibration and cartridge data..."
-#
-#
-# mkdir $dir
-#
-# echo ""
-#
-# echo "========================================================="
-# echo " *** DV ***"
-# curl -s http://127.0.0.1:5000/calibration/sensor_linear/active/data/dv/meter | \jq '.'
-os.system("curl -s http://127.0.0.1:5000/calibration/sensor_linear/active/data/dv/meter | \jq '.'")
-# echo "========================================================="
-# echo " *** Pressure ***"
-# curl -s http://127.0.0.1:5000/calibration/sensor_linear/active/data/pressure/psi | \jq '.'
-os.system("curl -s http://127.0.0.1:5000/calibration/sensor_linear/active/data/pressure/psi | \jq '.'")
-# echo "========================================================="
-
-# cartridge="{\"inner_diameter_in\": $iDiameter, \"length_in\": $iLength, \"ply\": $iPly, \"cure_time_ambient_min\": $iCureAmbient, \"post_cure_time_min\": $iCureBaked, \"resin_type\": $iRType,
-# \"liner_type\": $iLType, \"recorded_at\": $tstamp }"
 
 
 
@@ -78,7 +29,6 @@ os.system("curl -s http://127.0.0.1:5000/calibration/sensor_linear/active/data/p
 
 timestamp = datetime.now()
 testDir = "$dir/mass_(timestamp)"
-
 diameter = os.system("jq .inner_diameter_in $dir/cartridge.json")
 ballsRolled = 0
 balls = [67, 1046, 130, 8164, 3, 1807, 28, 226, 4273, 8, 93, 536]
@@ -88,8 +38,36 @@ numOfBalls = len(balls)
 print("Making new test directory...")
 os.system("sudo mkdir testDir")
 
+os.system("systemctl stop rosenimbus-backend.service")
+
 for numOfBalls in balls:
+      ballDiameter = 1
       ballsRolled = ballsRolled + 1
+
+      if ballDiameter >= diameter:
+            print("==============================================\n"
+                  "%s / %s Skipping the %s gram ball as it will not fit in cartridge")
+            touchFile = testDir / massSizeSkipped
+            os.system("touch $touchFile")
+print("=========================================================\n")
+print(ballsRolled / numOfBalls + "Please use " + mass + "gram ball next...")
+print("Roll the ball through the training cartridge three times in the same direction within 30 seconds\n")
+print("Press 'Escape' to skip this ball or 'Enter' when you're ready to begin")
+while True:
+      try:
+            if keyboard.is_pressed('esc'):
+                  print("Skipping " + mass +"gram ball by user command")
+                  break
+
+            if keyboard.is_pressed('enter'):
+                  testfile = testDir / mass-g.csv
+                  os.system("python /root/DeviceBackend/example/totalreader/totalreader_csv.py -c $testfile 0.01 30 $mass")
+                  break
+      except:
+            break
+
+print("Restarting Device Backend service...")
+os.system("systemctl start rosenimbus-backend.service")
 
 
 

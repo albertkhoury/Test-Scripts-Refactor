@@ -11,7 +11,8 @@ sg.theme('DarkAmber')   # Add a touch of color
 layout = [  [sg.Text('Red Meter Serial #: xxxxx')],
             [sg.Text(latestRAW)],
             [sg.Text('Cartridge Name:'), sg.InputText(), sg.Button('Enter')],
-            [sg.Text('RUN Mass Configuration [Saved/NotSaved]'), sg.Button('Configure')],
+            [sg.Text('RUN Mass Configuration [Saved/NotSaved]'), sg.Button('Configure Mass')],
+            [sg.Text('Temperature and Pressure'), sg.Button('Run Temp/Press')],
             [sg.Button('Mass Calibration')],
             [sg.Button('Exit')] ]
 
