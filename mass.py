@@ -16,19 +16,16 @@ cartName = input("ENTER:  Cartridge name: ")
 
 # REWRITE :
 #
-# dir="/var/lib/rosenimbus/csv/$cname"
-#
-# if [[ -d $dir ]]
-# then
-#     echo "A cartridge with this name/serial has already been tested. Re-using cartridge specifications."
-#
-#     echo ""
-# else
-#     ./cartridge.sh $cname
-# fi
+dir = "/var/lib/rosenimbus/csv/" + cartName
+if os.path.isfile(dir):
+      print("A cartridge with this name/serial has already been tested. Re-using cartridge specifications.")
+
+else:
+#      ./cartridge.sh $cname
+
 
 timestamp = datetime.now()
-testDir = "$dir/mass_(timestamp)"
+testDir =  str(dir + "/mass_" + timestamp)
 diameter = os.system("jq .inner_diameter_in $dir/cartridge.json")
 ballsRolled = 0
 balls = [67, 1046, 130, 8164, 3, 1807, 28, 226, 4273, 8, 93, 536]
@@ -56,12 +53,12 @@ print("Press 'Escape' to skip this ball or 'Enter' when you're ready to begin")
 while True:
       try:
             if keyboard.is_pressed('esc'):
-                  print("Skipping " + mass +"gram ball by user command")
+                  print("Skipping " + mass + " gram ball by user command")
                   break
 
             if keyboard.is_pressed('enter'):
                   testfile = testDir / mass-g.csv
-                  os.system("python /root/DeviceBackend/example/totalreader/totalreader_csv.py -c $testfile 0.01 30 $mass")
+                  os.system("python /root/DeviceBackend/example/totalreader/totalreader_csv.py -c" + testfile + " 0.01 30 " + mass)
                   break
       except:
             break

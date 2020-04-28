@@ -15,7 +15,7 @@ cartName = input("Enter a name for the cartridge")
 dir = "/var/lib/rosenimbus/csv/" + cartName
 
 #this logic probably doesn't work
-if os.system("if [[ -d $dir ]]") == dir:
+if os.path.isfile(dir):
     print("A cartridge with this name/serial has already been tested. Re-using cartridge specifications")
 
 #TEST

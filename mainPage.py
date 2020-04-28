@@ -11,8 +11,8 @@ sg.theme('DarkAmber')   # Add a touch of color
 layout = [  [sg.Text('Red Meter Serial #: xxxxx')],
             [sg.Text(latestRAW)],
             [sg.Text('Cartridge Name:'), sg.InputText(), sg.Button('Enter')],
-            [sg.Text('RUN Mass Configuration [Saved/NotSaved]'), sg.Button('Configure Mass')],
-            [sg.Text('Temperature and Pressure'), sg.Button('Run Temp/Press')],
+            [sg.Text('RUN Mass Configuration [Saved/NotSaved]'), sg.Button('Mass Configuration')],
+            [sg.Text('Temperature and Pressure Configuration'), sg.Button('Temp/Press Configuration')],
             [sg.Button('Mass Calibration')],
             [sg.Button('Exit')] ]
 
@@ -28,7 +28,7 @@ while True:
         break
     print('You entered ', values[0])
 
-
-
+    # if event == 'Run Mass Configuration':
+    #     exec(open('mass.py').read())
 
 window.close()
