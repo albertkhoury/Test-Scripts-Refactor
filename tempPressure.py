@@ -19,7 +19,10 @@ if os.path.isfile(dir):
     print("A cartridge with this name/serial has already been tested. Re-using cartridge specifications")
 
 #TEST
-os.system("./cartridge.sh " + dir)
+
+# os.system("./cartridge.sh " + dir)
+exec(open('cartridge.py').read())
+
 timestamp = datetime.now()
 testDir = dir + 'temp_pressure_' + timestamp
 os.system("sudo mkdir " + testDir)
